@@ -18,6 +18,7 @@
 #include <QJsonDocument>
 
 namespace Swagger {
+
 SWGPetApi::SWGPetApi() {}
 
 SWGPetApi::~SWGPetApi() {}
@@ -28,7 +29,7 @@ SWGPetApi::SWGPetApi(QString host, QString basePath) {
 }
 
 void
-SWGPetApi::addPet(SWGPet body) {
+SWGPetApi::addPet(Pet body) {
     QString fullPath;
     fullPath.append(this->host).append(this->basePath).append("/pet");
 
@@ -37,11 +38,15 @@ SWGPetApi::addPet(SWGPet body) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "POST");
 
-    
+
     QString output = body.asJson();
     input.request_body.append(output);
     
 
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -54,6 +59,9 @@ SWGPetApi::addPet(SWGPet body) {
 void
 SWGPetApi::addPetCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -61,13 +69,12 @@ SWGPetApi::addPetCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-
     worker->deleteLater();
 
-    
     emit addPetSignal();
+    emit addPetSignalE(error_type, error_str);
 }
+
 void
 SWGPetApi::deletePet(qint64 pet_id, QString* api_key) {
     QString fullPath;
@@ -80,10 +87,16 @@ SWGPetApi::deletePet(qint64 pet_id, QString* api_key) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "DELETE");
 
-    
 
 
-    // TODO: add header support
+
+    if (api_key != nullptr) {
+        input.headers.insert("api_key", "api_key");
+    }
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -96,6 +109,9 @@ SWGPetApi::deletePet(qint64 pet_id, QString* api_key) {
 void
 SWGPetApi::deletePetCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -103,13 +119,12 @@ SWGPetApi::deletePetCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-
     worker->deleteLater();
 
-    
     emit deletePetSignal();
+    emit deletePetSignalE(error_type, error_str);
 }
+
 void
 SWGPetApi::findPetsByStatus(QList<QString*>* status) {
     QString fullPath;
@@ -162,9 +177,13 @@ SWGPetApi::findPetsByStatus(QList<QString*>* status) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "GET");
 
-    
 
 
+
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -177,6 +196,9 @@ SWGPetApi::findPetsByStatus(QList<QString*>* status) {
 void
 SWGPetApi::findPetsByStatusCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -184,28 +206,26 @@ SWGPetApi::findPetsByStatusCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-    QList<SWGPet*>* output = new QList<SWGPet*>();
+    QList<Pet*>* output = new QList<Pet*>();
     QString json(worker->response);
     QByteArray array (json.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonArray jsonArray = doc.array();
 
     foreach(QJsonValue obj, jsonArray) {
-        SWGPet* o = new SWGPet();
+        Pet* o = new Pet();
         QJsonObject jv = obj.toObject();
         QJsonObject * ptr = (QJsonObject*)&jv;
         o->fromJsonObject(*ptr);
         output->append(o);
     }
 
-    
-
     worker->deleteLater();
 
     emit findPetsByStatusSignal(output);
-    
+    emit findPetsByStatusSignalE(output, error_type, error_str);
 }
+
 void
 SWGPetApi::findPetsByTags(QList<QString*>* tags) {
     QString fullPath;
@@ -258,9 +278,13 @@ SWGPetApi::findPetsByTags(QList<QString*>* tags) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "GET");
 
-    
 
 
+
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -273,6 +297,9 @@ SWGPetApi::findPetsByTags(QList<QString*>* tags) {
 void
 SWGPetApi::findPetsByTagsCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -280,28 +307,26 @@ SWGPetApi::findPetsByTagsCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-    QList<SWGPet*>* output = new QList<SWGPet*>();
+    QList<Pet*>* output = new QList<Pet*>();
     QString json(worker->response);
     QByteArray array (json.toStdString().c_str());
     QJsonDocument doc = QJsonDocument::fromJson(array);
     QJsonArray jsonArray = doc.array();
 
     foreach(QJsonValue obj, jsonArray) {
-        SWGPet* o = new SWGPet();
+        Pet* o = new Pet();
         QJsonObject jv = obj.toObject();
         QJsonObject * ptr = (QJsonObject*)&jv;
         o->fromJsonObject(*ptr);
         output->append(o);
     }
 
-    
-
     worker->deleteLater();
 
     emit findPetsByTagsSignal(output);
-    
+    emit findPetsByTagsSignalE(output, error_type, error_str);
 }
+
 void
 SWGPetApi::getPetById(qint64 pet_id) {
     QString fullPath;
@@ -314,9 +339,13 @@ SWGPetApi::getPetById(qint64 pet_id) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "GET");
 
-    
 
 
+
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -329,6 +358,9 @@ SWGPetApi::getPetById(qint64 pet_id) {
 void
 SWGPetApi::getPetByIdCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -336,18 +368,17 @@ SWGPetApi::getPetByIdCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-        QString json(worker->response);
-    SWGPet* output = static_cast<SWGPet*>(create(json, QString("SWGPet")));
-    
 
+    QString json(worker->response);
+    Pet* output = static_cast<Pet*>(create(json, QString("Pet")));
     worker->deleteLater();
 
     emit getPetByIdSignal(output);
-    
+    emit getPetByIdSignalE(output, error_type, error_str);
 }
+
 void
-SWGPetApi::updatePet(SWGPet body) {
+SWGPetApi::updatePet(Pet body) {
     QString fullPath;
     fullPath.append(this->host).append(this->basePath).append("/pet");
 
@@ -356,11 +387,15 @@ SWGPetApi::updatePet(SWGPet body) {
     HttpRequestWorker *worker = new HttpRequestWorker();
     HttpRequestInput input(fullPath, "PUT");
 
-    
+
     QString output = body.asJson();
     input.request_body.append(output);
     
 
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -373,6 +408,9 @@ SWGPetApi::updatePet(SWGPet body) {
 void
 SWGPetApi::updatePetCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -380,13 +418,12 @@ SWGPetApi::updatePetCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-
     worker->deleteLater();
 
-    
     emit updatePetSignal();
+    emit updatePetSignalE(error_type, error_str);
 }
+
 void
 SWGPetApi::updatePetWithForm(qint64 pet_id, QString* name, QString* status) {
     QString fullPath;
@@ -402,12 +439,16 @@ SWGPetApi::updatePetWithForm(qint64 pet_id, QString* name, QString* status) {
     if (name != nullptr) {
         input.add_var("name", *name);
     }
-if (status != nullptr) {
+    if (status != nullptr) {
         input.add_var("status", *status);
     }
 
 
 
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -420,6 +461,9 @@ if (status != nullptr) {
 void
 SWGPetApi::updatePetWithFormCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -427,13 +471,12 @@ SWGPetApi::updatePetWithFormCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-
     worker->deleteLater();
 
-    
     emit updatePetWithFormSignal();
+    emit updatePetWithFormSignalE(error_type, error_str);
 }
+
 void
 SWGPetApi::uploadFile(qint64 pet_id, QString* additional_metadata, SWGHttpRequestInputFileElement* file) {
     QString fullPath;
@@ -449,12 +492,16 @@ SWGPetApi::uploadFile(qint64 pet_id, QString* additional_metadata, SWGHttpReques
     if (additional_metadata != nullptr) {
         input.add_var("additionalMetadata", *additional_metadata);
     }
-if (file != nullptr) {
+    if (file != nullptr) {
         input.add_file("file", (*file).local_filename, (*file).request_filename, (*file).mime_type);
     }
 
 
 
+
+    foreach(QString key, this->defaultHeaders.keys()) {
+        input.headers.insert(key, this->defaultHeaders.value(key));
+    }
 
     connect(worker,
             &HttpRequestWorker::on_execution_finished,
@@ -467,6 +514,9 @@ if (file != nullptr) {
 void
 SWGPetApi::uploadFileCallback(HttpRequestWorker * worker) {
     QString msg;
+    QString error_str = worker->error_str;
+    QNetworkReply::NetworkError error_type = worker->error_type;
+
     if (worker->error_type == QNetworkReply::NoError) {
         msg = QString("Success! %1 bytes").arg(worker->response.length());
     }
@@ -474,14 +524,14 @@ SWGPetApi::uploadFileCallback(HttpRequestWorker * worker) {
         msg = "Error: " + worker->error_str;
     }
 
-    
-        QString json(worker->response);
-    SWGApiResponse* output = static_cast<SWGApiResponse*>(create(json, QString("SWGApiResponse")));
-    
 
+    QString json(worker->response);
+    ApiResponse* output = static_cast<ApiResponse*>(create(json, QString("ApiResponse")));
     worker->deleteLater();
 
     emit uploadFileSignal(output);
-    
+    emit uploadFileSignalE(output, error_type, error_str);
 }
-} /* namespace Swagger */
+
+
+}

@@ -36,6 +36,33 @@ public class CodegenConstants {
     public static final String ARTIFACT_VERSION = "artifactVersion";
     public static final String ARTIFACT_VERSION_DESC = "artifact version in generated pom.xml";
 
+    public static final String ARTIFACT_URL = "artifactUrl";
+    public static final String ARTIFACT_URL_DESC = "artifact URL in generated pom.xml";
+
+    public static final String ARTIFACT_DESCRIPTION = "artifactDescription";
+    public static final String ARTIFACT_DESCRIPTION_DESC = "artifact description in generated pom.xml";
+
+    public static final String SCM_CONNECTION = "scmConnection";
+    public static final String SCM_CONNECTION_DESC = "SCM connection in generated pom.xml";
+
+    public static final String SCM_DEVELOPER_CONNECTION = "scmDeveloperConnection";
+    public static final String SCM_DEVELOPER_CONNECTION_DESC = "SCM developer connection in generated pom.xml";
+
+    public static final String SCM_URL = "scmUrl";
+    public static final String SCM_URL_DESC = "SCM URL in generated pom.xml";
+
+    public static final String DEVELOPER_NAME = "developerName";
+    public static final String DEVELOPER_NAME_DESC = "developer name in generated pom.xml";
+
+    public static final String DEVELOPER_EMAIL = "developerEmail";
+    public static final String DEVELOPER_EMAIL_DESC = "developer email in generated pom.xml";
+
+    public static final String DEVELOPER_ORGANIZATION = "developerOrganization";
+    public static final String DEVELOPER_ORGANIZATION_DESC = "developer organization in generated pom.xml";
+
+    public static final String DEVELOPER_ORGANIZATION_URL = "developerOrganizationUrl";
+    public static final String DEVELOPER_ORGANIZATION_URL_DESC = "developer organization URL in generated pom.xml";
+
     public static final String LICENSE_NAME = "licenseName";
     public static final String LICENSE_NAME_DESC = "The name of the license";
 
@@ -69,6 +96,7 @@ public class CodegenConstants {
     public static final String ENSURE_UNIQUE_PARAMS = "ensureUniqueParams";
     public static final String ENSURE_UNIQUE_PARAMS_DESC = "Whether to ensure parameter names are unique in an operation (rename parameters that are not).";
 
+    public static final String PROJECT_NAME = "projectName";
     public static final String PACKAGE_NAME = "packageName";
     public static final String PACKAGE_VERSION = "packageVersion";
 
@@ -80,6 +108,8 @@ public class CodegenConstants {
     public static final String PACKAGE_DESCRIPTION_DESC = "Specifies a AssemblyDescription for the .NET Framework global assembly attributes stored in the AssemblyInfo file.";
     public static final String PACKAGE_COMPANY = "packageCompany";
     public static final String PACKAGE_COMPANY_DESC = "Specifies an AssemblyCompany for the .NET Framework global assembly attributes stored in the AssemblyInfo file.";
+    public static final String PACKAGE_AUTHORS = "packageAuthors";
+    public static final String PACKAGE_AUTHORS_DESC = "Specifies Authors property in the .NET Core project file.";
     public static final String PACKAGE_COPYRIGHT = "packageCopyright";
     public static final String PACKAGE_COPYRIGHT_DESC = "Specifies an AssemblyCopyright for the .NET Framework global assembly attributes stored in the AssemblyInfo file.";
 
@@ -90,6 +120,9 @@ public class CodegenConstants {
 
     public static final String OPTIONAL_ASSEMBLY_INFO = "optionalAssemblyInfo";
     public static final String OPTIONAL_ASSEMBLY_INFO_DESC = "Generate AssemblyInfo.cs.";
+
+    public static final String NETCORE_PROJECT_FILE = "netCoreProjectFile";
+    public static final String NETCORE_PROJECT_FILE_DESC = "Use the new format (.NET Core) for .NET project files (.csproj).";
 
     public static final String USE_COLLECTION = "useCollection";
     public static final String USE_COLLECTION_DESC = "Deserialize array types to Collection<T> instead of List<T>.";
@@ -141,14 +174,20 @@ public class CodegenConstants {
     public static final String EXCLUDE_TESTS = "excludeTests";
     public static final String EXCLUDE_TESTS_DESC = "Specifies that no tests are to be generated.";
 
+    // Not user-configurable. System provided for use in templates.
+    public static final String GENERATE_API_DOCS = "generateApiDocs";
+
     public static final String GENERATE_API_TESTS = "generateApiTests";
     public static final String GENERATE_API_TESTS_DESC = "Specifies that api tests are to be generated.";
+
+    // Not user-configurable. System provided for use in templates.
+    public static final String GENERATE_MODEL_DOCS = "generateModelDocs";
 
     public static final String GENERATE_MODEL_TESTS = "generateModelTests";
     public static final String GENERATE_MODEL_TESTS_DESC = "Specifies that model tests are to be generated.";
 
     public static final String HIDE_GENERATION_TIMESTAMP = "hideGenerationTimestamp";
-    public static final String HIDE_GENERATION_TIMESTAMP_DESC = "Hides the generation timestamp.";
+    public static final String HIDE_GENERATION_TIMESTAMP_DESC = "Hides the generation timestamp when files are generated.";
 
     public static final String GENERATE_PROPERTY_CHANGED = "generatePropertyChanged";
     public static final String GENERATE_PROPERTY_CHANGED_DESC = "Specifies that models support raising property changed events.";
@@ -158,4 +197,7 @@ public class CodegenConstants {
 
     public static final String IGNORE_FILE_OVERRIDE = "ignoreFileOverride";
     public static final String IGNORE_FILE_OVERRIDE_DESC = "Specifies an override location for the .swagger-codegen-ignore file. Most useful on initial generation.";
+
+    public static final String REMOVE_OPERATION_ID_PREFIX = "removeOperationIdPrefix";
+    public static final String REMOVE_OPERATION_ID_PREFIX_DESC = "Remove prefix of operationId, e.g. config_getId => getId";
 }

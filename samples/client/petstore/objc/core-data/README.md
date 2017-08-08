@@ -39,7 +39,7 @@ Import the following:
 
 ```objc
 #import <SwaggerClient/SWGApiClient.h>
-#import <SwaggerClient/SWGConfiguration.h>
+#import <SwaggerClient/SWGDefaultConfiguration.h>
 // load models
 #import <SwaggerClient/SWGCategory.h>
 #import <SwaggerClient/SWGOrder.h>
@@ -63,13 +63,13 @@ Please follow the [installation procedure](#installation--usage) and then run th
 
 ```objc
 
-SWGConfiguration *apiConfig = [SWGConfiguration sharedConfig];
+SWGDefaultConfiguration *apiConfig = [SWGDefaultConfiguration sharedConfig];
 
 // Configure OAuth2 access token for authorization: (authentication scheme: petstore_auth)
 [apiConfig setAccessToken:@"YOUR_ACCESS_TOKEN"];
 
 
-SWGPet* *body = [[SWGPet alloc] init]; // Pet object that needs to be added to the store (optional)
+SWGPet* *body = [[Pet alloc] init]; // Pet object that needs to be added to the store (optional)
 
 SWGPetApi *apiInstance = [[SWGPetApi alloc] init];
 
